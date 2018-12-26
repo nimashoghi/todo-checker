@@ -56,6 +56,8 @@ function Build-Project {
     }
 }
 
+task default -depends run
+
 task clean -depends clean-all
 task clean-all -depends clean-library, clean-cli, clean-tests
 
@@ -105,5 +107,19 @@ task test -depends run-tests
 task run-tests -depends restore-tests {
     Invoke-Project -Path "$PSScriptRoot\TodoChecker.Tests" -Command {
         dotnet.exe run
+    }
+}
+
+task run -depends run-cli
+task run-cli -depends restore-cli {
+    Invoke-Project -Path "$PSScriptRoot\TodoChecker.CLI" -Command {
+        dotnet.exe run
+    }
+}
+
+task publish -depends clean-library, clean-cli, build-cli {
+    Invoke-Project -Path "$PSScriptRoot\TodoChecker.CLI" -Command {
+        # TODO: Add configuration for builds for other targets
+        dotnet.exe publish -c Release -r win10-x64
     }
 }

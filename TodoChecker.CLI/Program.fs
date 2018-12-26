@@ -1,6 +1,7 @@
 ﻿module TodoChecker.CLI
 
 open System
+open System.IO
 open Argu
 
 open TodoChecker
@@ -35,7 +36,7 @@ let main argv =
         // TODO: Clean up this color mess
         Console.ForegroundColor <- ConsoleColor.Red
         eprintfn "%i TODOs found:" (Array.length todos)
-        for {location = (TodoLocation (Absolute path, line, column)); comment = comment} in todos do
+        for {location = (TodoLocation (Absolute Path.GetFullPath path, line, column)); comment = comment} in todos do
             Console.ResetColor()
             eprintf "    [%s:%i:%i] " path line column
             Console.ForegroundColor <- ConsoleColor.Red
